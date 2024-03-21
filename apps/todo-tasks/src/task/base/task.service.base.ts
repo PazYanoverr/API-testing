@@ -10,7 +10,13 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Task as PrismaTask } from "@prisma/client";
+import {
+  Prisma,
+  Task as PrismaTask,
+  Comment as PrismaComment,
+} from "@prisma/client";
+import { Comment } from "../../comment/base/Comment";
+import { Task } from "./Task";
 
 export class TaskServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -45,5 +51,22 @@ export class TaskServiceBase {
     args: Prisma.SelectSubset<T, Prisma.TaskDeleteArgs>
   ): Promise<PrismaTask> {
     return this.prisma.task.delete(args);
+  }
+
+  async findComments(
+    parentId: string,
+    args: Prisma.CommentFindManyArgs
+  ): Promise<PrismaComment[]> {
+    return this.prisma.task
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .comments(args);
+  }
+  async AddComment(args: Comment): Promise<Task> {
+    throw new Error("Not implemented");
+  }
+  async TaskCompleted(args: number): Promise<Task> {
+    throw new Error("Not implemented");
   }
 }

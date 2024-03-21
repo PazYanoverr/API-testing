@@ -15,6 +15,7 @@ model Task {
   description String?
   dueDate     DateTime?
   status      EnumTaskStatus?
+  comments    Comment[]
 }
 
 model User {
@@ -37,6 +38,8 @@ model Comment {
   user      User?    @relation(fields: [userId], references: [id])
   userId    String?
   text      String
+  task      Task?    @relation(fields: [taskId], references: [id])
+  taskId    String?
 }
 
 enum EnumTaskStatus {

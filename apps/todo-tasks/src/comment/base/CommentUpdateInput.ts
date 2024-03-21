@@ -14,6 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ValidateNested, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
+import { TaskWhereUniqueInput } from "../../task/base/TaskWhereUniqueInput";
 
 @InputType()
 class CommentUpdateInput {
@@ -39,6 +40,18 @@ class CommentUpdateInput {
     nullable: true,
   })
   text?: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => TaskWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => TaskWhereUniqueInput)
+  @IsOptional()
+  @Field(() => TaskWhereUniqueInput, {
+    nullable: true,
+  })
+  task?: TaskWhereUniqueInput | null;
 }
 
 export { CommentUpdateInput as CommentUpdateInput };

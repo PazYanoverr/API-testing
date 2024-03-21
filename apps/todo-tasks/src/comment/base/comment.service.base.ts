@@ -14,6 +14,7 @@ import {
   Prisma,
   Comment as PrismaComment,
   User as PrismaUser,
+  Task as PrismaTask,
 } from "@prisma/client";
 
 export class CommentServiceBase {
@@ -57,5 +58,13 @@ export class CommentServiceBase {
         where: { id: parentId },
       })
       .user();
+  }
+
+  async getTask(parentId: string): Promise<PrismaTask | null> {
+    return this.prisma.comment
+      .findUnique({
+        where: { id: parentId },
+      })
+      .task();
   }
 }

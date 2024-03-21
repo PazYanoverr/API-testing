@@ -14,6 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsDate, ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
 import { User } from "../../user/base/User";
+import { Task } from "../../task/base/Task";
 
 @ObjectType()
 class Comment {
@@ -57,6 +58,15 @@ class Comment {
   @IsString()
   @Field(() => String)
   text!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => Task,
+  })
+  @ValidateNested()
+  @Type(() => Task)
+  @IsOptional()
+  task?: Task | null;
 }
 
 export { Comment as Comment };

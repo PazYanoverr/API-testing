@@ -39,6 +39,12 @@ export class CommentControllerBase {
               connect: data.user,
             }
           : undefined,
+
+        task: data.task
+          ? {
+              connect: data.task,
+            }
+          : undefined,
       },
       select: {
         id: true,
@@ -52,6 +58,12 @@ export class CommentControllerBase {
         },
 
         text: true,
+
+        task: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -75,6 +87,12 @@ export class CommentControllerBase {
         },
 
         text: true,
+
+        task: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -99,6 +117,12 @@ export class CommentControllerBase {
         },
 
         text: true,
+
+        task: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
     if (result === null) {
@@ -127,6 +151,12 @@ export class CommentControllerBase {
                 connect: data.user,
               }
             : undefined,
+
+          task: data.task
+            ? {
+                connect: data.task,
+              }
+            : undefined,
         },
         select: {
           id: true,
@@ -140,6 +170,12 @@ export class CommentControllerBase {
           },
 
           text: true,
+
+          task: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -173,6 +209,12 @@ export class CommentControllerBase {
           },
 
           text: true,
+
+          task: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {

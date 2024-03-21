@@ -22,6 +22,9 @@ import { Task } from "./Task";
 import { TaskFindManyArgs } from "./TaskFindManyArgs";
 import { TaskWhereUniqueInput } from "./TaskWhereUniqueInput";
 import { TaskUpdateInput } from "./TaskUpdateInput";
+import { CommentFindManyArgs } from "../../comment/base/CommentFindManyArgs";
+import { Comment } from "../../comment/base/Comment";
+import { CommentWhereUniqueInput } from "../../comment/base/CommentWhereUniqueInput";
 
 export class TaskControllerBase {
   constructor(protected readonly service: TaskService) {}
@@ -145,5 +148,127 @@ export class TaskControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/comments")
+  @ApiNestedQuery(CommentFindManyArgs)
+  async findComments(
+    @common.Req() request: Request,
+    @common.Param() params: TaskWhereUniqueInput
+  ): Promise<Comment[]> {
+    const query = plainToClass(CommentFindManyArgs, request.query);
+    const results = await this.service.findComments(params.id, {
+      ...query,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+
+        text: true,
+
+        task: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/comments")
+  async connectComments(
+    @common.Param() params: TaskWhereUniqueInput,
+    @common.Body() body: CommentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      comments: {
+        connect: body,
+      },
+    };
+    await this.service.updateTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/comments")
+  async updateComments(
+    @common.Param() params: TaskWhereUniqueInput,
+    @common.Body() body: CommentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      comments: {
+        set: body,
+      },
+    };
+    await this.service.updateTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/comments")
+  async disconnectComments(
+    @common.Param() params: TaskWhereUniqueInput,
+    @common.Body() body: CommentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      comments: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Post("/add-comment")
+  @swagger.ApiOkResponse({
+    type: Task,
+  })
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async AddComment(
+    @common.Body()
+    body: Comment
+  ): Promise<Task> {
+    return this.service.AddComment(body);
+  }
+
+  @common.Patch("/:id/task-completed")
+  @swagger.ApiOkResponse({
+    type: Task,
+  })
+  @swagger.ApiNotFoundResponse({
+    type: errors.NotFoundException,
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async TaskCompleted(
+    @common.Query()
+    query: number
+  ): Promise<Task> {
+    return this.service.TaskCompleted(query);
   }
 }
