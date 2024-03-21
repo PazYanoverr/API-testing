@@ -15,6 +15,7 @@ import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { TaskWhereUniqueInput } from "../../task/base/TaskWhereUniqueInput";
 
 @InputType()
 class CommentWhereInput {
@@ -51,6 +52,18 @@ class CommentWhereInput {
     nullable: true,
   })
   text?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => TaskWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => TaskWhereUniqueInput)
+  @IsOptional()
+  @Field(() => TaskWhereUniqueInput, {
+    nullable: true,
+  })
+  task?: TaskWhereUniqueInput;
 }
 
 export { CommentWhereInput as CommentWhereInput };

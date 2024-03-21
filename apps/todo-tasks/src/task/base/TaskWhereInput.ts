@@ -13,10 +13,11 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-import { IsOptional, IsEnum } from "class-validator";
+import { IsOptional, IsEnum, ValidateNested } from "class-validator";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { EnumTaskStatus } from "./EnumTaskStatus";
+import { CommentListRelationFilter } from "../../comment/base/CommentListRelationFilter";
 
 @InputType()
 class TaskWhereInput {
@@ -74,6 +75,18 @@ class TaskWhereInput {
     nullable: true,
   })
   status?: "Active" | "Completed";
+
+  @ApiProperty({
+    required: false,
+    type: () => CommentListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => CommentListRelationFilter)
+  @IsOptional()
+  @Field(() => CommentListRelationFilter, {
+    nullable: true,
+  })
+  comments?: CommentListRelationFilter;
 }
 
 export { TaskWhereInput as TaskWhereInput };

@@ -11,9 +11,16 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, IsDate, IsEnum } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  IsDate,
+  IsEnum,
+  ValidateNested,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { EnumTaskStatus } from "./EnumTaskStatus";
+import { CommentUpdateManyWithoutTasksInput } from "./CommentUpdateManyWithoutTasksInput";
 
 @InputType()
 class TaskUpdateInput {
@@ -60,6 +67,18 @@ class TaskUpdateInput {
     nullable: true,
   })
   status?: "Active" | "Completed" | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => CommentUpdateManyWithoutTasksInput,
+  })
+  @ValidateNested()
+  @Type(() => CommentUpdateManyWithoutTasksInput)
+  @IsOptional()
+  @Field(() => CommentUpdateManyWithoutTasksInput, {
+    nullable: true,
+  })
+  comments?: CommentUpdateManyWithoutTasksInput;
 }
 
 export { TaskUpdateInput as TaskUpdateInput };

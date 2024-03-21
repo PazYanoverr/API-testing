@@ -11,9 +11,16 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate, IsOptional, IsEnum } from "class-validator";
+import {
+  IsString,
+  IsDate,
+  IsOptional,
+  IsEnum,
+  ValidateNested,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { EnumTaskStatus } from "./EnumTaskStatus";
+import { Comment } from "../../comment/base/Comment";
 
 @ObjectType()
 class Task {
@@ -81,6 +88,15 @@ class Task {
     nullable: true,
   })
   status?: "Active" | "Completed" | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Comment],
+  })
+  @ValidateNested()
+  @Type(() => Comment)
+  @IsOptional()
+  comments?: Array<Comment>;
 }
 
 export { Task as Task };

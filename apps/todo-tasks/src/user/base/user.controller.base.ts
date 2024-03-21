@@ -176,6 +176,12 @@ export class UserControllerBase {
         },
 
         text: true,
+
+        task: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
     if (results === null) {
