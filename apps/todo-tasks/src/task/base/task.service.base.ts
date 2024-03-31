@@ -21,16 +21,14 @@ import { Task } from "./Task";
 export class TaskServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
 
-  async count<T extends Prisma.TaskCountArgs>(
-    args: Prisma.SelectSubset<T, Prisma.TaskCountArgs>
-  ): Promise<number> {
+  async count(args: Omit<Prisma.TaskCountArgs, "select">): Promise<number> {
     return this.prisma.task.count(args);
   }
 
   async tasks<T extends Prisma.TaskFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.TaskFindManyArgs>
   ): Promise<PrismaTask[]> {
-    return this.prisma.task.findMany(args);
+    return this.prisma.task.findMany<Prisma.TaskFindManyArgs>(args);
   }
   async task<T extends Prisma.TaskFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.TaskFindUniqueArgs>

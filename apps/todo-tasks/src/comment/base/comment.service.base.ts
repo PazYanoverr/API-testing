@@ -20,16 +20,14 @@ import {
 export class CommentServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
 
-  async count<T extends Prisma.CommentCountArgs>(
-    args: Prisma.SelectSubset<T, Prisma.CommentCountArgs>
-  ): Promise<number> {
+  async count(args: Omit<Prisma.CommentCountArgs, "select">): Promise<number> {
     return this.prisma.comment.count(args);
   }
 
   async comments<T extends Prisma.CommentFindManyArgs>(
     args: Prisma.SelectSubset<T, Prisma.CommentFindManyArgs>
   ): Promise<PrismaComment[]> {
-    return this.prisma.comment.findMany(args);
+    return this.prisma.comment.findMany<Prisma.CommentFindManyArgs>(args);
   }
   async comment<T extends Prisma.CommentFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.CommentFindUniqueArgs>
